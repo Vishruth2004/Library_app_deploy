@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4" style="color: #5a6268;">Book Requests</h1>
+        {% if pending_requests %}
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="text-align: center;">User Name</th>
+                        <th style="text-align: center;">Book Name</th>
+                        <th style="text-align: center;">Book Author</th>
+                        <th style="text-align: center;">Date and Time Requested</th>
+                        <th style="text-align: center;">Status</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in pending_requests %}
+                        <tr>
+                            <td style="text-align: center;">{{ request.user.username }}</td>
+                            <td style="text-align: center;">{{ request.book.name }}</td>
+                            <td style="text-align: center;">{{ request.book.author }}</td>
+                            <td style="text-align: center;">{{ request.date_requested.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            <td style="text-align: center;">{{ request.status }}</td>
+                            <td style="text-align: center;">
+                                {% if request.status == 'Pending Approval' %}
+                                    <a href="{{ url_for('librarian_accept_request', request_id=request.id) }}" class="btn btn-success">Accept</a>
+                                    <a href="{{ url_for('librarian_reject_request', request_id=request.id) }}" class="btn btn-danger">Reject</a>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No Pending Requests</p>
+        {% endif %}
+        <a href="{{ url_for('librarian_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,23 @@
+<!-- templates/librarian_reject_reason.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        {% if reason.status == 'Rejected' %}
+            <h1>Rejection Reason</h1>
+            <p>{{ reason.rejection_reason }}</p>
+        {% elif reason.status == 'Access Removed' %}
+            <h1>Reason for Access Removal</h1>
+            <p>{{ reason.rejection_reason }}</p>
+        {% elif reason.status == 'Due Date Passed' %}
+            <h1>Reason for Access Removal</h1>
+            <p>Due Date for the Book is Passed. Your Request the Book to Read again.</p>
+        {% endif %}
+
+        {% if GoBack == 0 %}
+            <a href="{{ url_for('librarian_show_book_requests') }}" class="btn btn-secondary">Go Back</a>
+        {% elif GoBack == 1 %}
+            <a href="{{ url_for('user_book_requests') }}" class="btn btn-secondary">Go Back</a>
+        {% endif %}
+    </div>
+{% endblock %}

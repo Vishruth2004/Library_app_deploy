@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% include 'search.html' %}
+<br>
+
+<h2 style="text-align: center;">Search Results for "{{ search_query }}"</h2>
+
+{% if search_type == 'sections' %}
+    {% if results %}
+    <h3>Sections</h3>
+    <table class="table table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th style="text-align: center;">Section Name</th>
+                <th style="text-align: center;">Description</th>
+                <th style="text-align: center;">Total Books</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for section in results %}
+            <tr>
+                <td style="text-align: center;"><a href="{{ url_for('user_section_details', section_id=section.id) }}"><strong>{{ section.name }}</strong></a></td>
+                <td style="text-align: center;">{{ section.description }}</td>
+                <td style="text-align: center;">{{ section.books.count() }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No sections found.</p>
+    {% endif %}
+{% elif search_type == 'books' %}
+    {% if results %}
+    <h3>Books</h3>
+    <table class="table table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th style="text-align: center;">Name</th>
+                <th style="text-align: center;">Author</th>
+                <th style="text-align: center;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for book in results %}
+            <tr>
+                <td style="text-align: center;">{{ book.name }}</td>
+                <td style="text-align: center;">{{ book.author }}</td>
+                <td style="text-align: center;"> 
+                    <a href="{{ url_for('search_user_add_to_cart', book_id=book.id, search_by=search_by, search_query=search_query, search_type=search_type) }}" class="btn btn-success">Add to Cart</a>
+                    <a href="{{ url_for('user_view_feedback', book_id=book.id) }}" class="btn btn-info">View Feedback</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No books found.</p>
+    {% endif %}
+{% endif %}
+<a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+{% endblock %}

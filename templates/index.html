@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Welcome to the Library</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #aed6f1; /* Light blue background */
+            color: #154360; /* Set text color to a darker blue */
+        }
+
+        .container {
+            margin-top: 50px; /* Add space at the top */
+            text-align: center; /* Center-align content */
+        }
+
+        h1 {
+            color: #154360; /* Set text color to a darker blue */
+        }
+
+        p {
+            font-size: 18px;
+        }
+
+        .features {
+            list-style: none; /* Remove default list styling */
+            padding: 0;
+        }
+
+        .features li {
+            background-color: rgba(21, 67, 96, 0.1); /* Semi-transparent blue background */
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+
+        .features li::before {
+            content: '\2022'; /* Use a bullet point for each feature */
+            color: #154360;
+            font-size: 24px;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+
+        .btn-primary {
+            background-color: #3498db; /* Set a blue color for the primary button */
+            border-color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Library Management System</h1>
+        <p class="lead">
+            Explore a world of knowledge and stories at your fingertips. 
+            Login to your personalized dashboard to access a variety of e-books, 
+            manage your requests, and provide valuable feedback.
+        </p>
+
+        <h2 class="mt-4">Key Features:</h2>
+        <ul class="features">
+            <li>Multi-user system with dedicated roles for users/students.</li>
+            <li>Easy issuance, reading, and return of e-books.</li>
+            <li>Request books based on your interests.</li>
+            <li>Share your thoughts by giving feedback on books.</li>
+            <li>Discover recently added sections/books or explore based on ratings.</li>
+        </ul>
+
+        <p class="mt-4">
+            Ready to embark on a literary journey? 
+            <a href="/login" class="btn btn-primary btn-lg">Login Now</a>
+        </p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+</body>
+</html>

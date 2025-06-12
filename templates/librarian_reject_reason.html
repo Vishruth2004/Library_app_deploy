@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        {% if request.status == 'Rejected' %}
+            <h1>Provide Rejection Reason</h1>
+            <form action="{{ url_for('librarian_reject_request_with_reason', request_id=request_id) }}" method="post">
+                <div class="form-group">
+                    <label for="rejection_reason">Reason for Rejection:</label>
+                    <input type="text" name="rejection_reason" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        {% else %}
+            <h1>Provide reason for Access Removal</h1>
+            <form action="{{ url_for('librarian_reject_request_with_reason', request_id=request_id) }}" method="post">
+                <div class="form-group">
+                    <label for="rejection_reason">Reason for Removing Access:</label>
+                    <input type="text" name="rejection_reason" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

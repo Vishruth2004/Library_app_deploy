@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4" style="color: #5a6268;">User Book Requests</h1>
+        <table class="table table-bordered table-dark">
+            <thead class="thead-dark">
+                <tr>
+                    <th style="text-align: center;">Book Name</th>
+                    <th style="text-align: center;">Book Author</th>
+                    <th style="text-align: center;">Date Issued</th>
+                    <th style="text-align: center;">Return Date</th>
+                    <th style="text-align: center;">Status</th>
+                    <th style="text-align: center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for status in ["Pending Approval", "Approved", "Rejected", "User Returned", "Access Removed", "Due Date Passed"] %}
+                    {% for request in user_requests if request.status == status %}
+                        <tr>
+                            <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; text-align: center;">{{ request.book.name }}</td>
+                            <td style="max-width: 75px; overflow: hidden; text-overflow: ellipsis; text-align: center;">{{ request.book.author }}</td>
+                            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; text-align: center;">{{ request.book.date_issued.strftime('%Y-%m-%d %H:%M:%S') if request.book.date_issued else 'N/A' }}</td>
+                            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; text-align: center;">{{ request.book.return_date.strftime('%Y-%m-%d %H:%M:%S') if request.book.return_date else 'N/A' }}</td>
+                            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; text-align: center;">{{ request.status }}</td>
+                            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; text-align: center;">
+                            {% if request.status == 'Approved' %}
+                                <a href="{{ url_for('user_return_book', request_id=request.id) }}" class="btn btn-primary">Return Book</a>
+                                <a href="{{ url_for('user_give_feedback', request_id=request.id) }}" class="btn btn-success">Feedback</a>
+                                <a href="{{ url_for('view_book', book_id=request.book.id) }}" class="btn btn-info">Read</a>
+                            {% elif request.status == 'Pending Approval' %}
+                                <a href="{{ url_for('user_unsend_request', request_id=request.id) }}" class="btn btn-danger">Unsend Request</a>
+                            {% elif request.status in ['Rejected', 'Access Removed', 'Due Date Passed'] %}
+                                <a href="{{ url_for('user_view_rejection_reason', request_id=request.id) }}" class="btn btn-info">View Reason</a>
+                            {% else %}
+                                N/A
+                            {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Library Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha384-o5dbz5B2TKr5zJl3I+4HlqLXA4tzZHAIR0N7c9eMDe5WblPqF2TJL77I5JgKd3T0" crossorigin="anonymous">
+    <style>
+        /* Customize dropdown menu background color */
+        .navbar-dark .navbar-nav .nav-link {
+            color: #fff; /* Set text color to white */
+        }
+
+        .navbar-dark .navbar-toggler-icon {
+            background-color: #fff; /* Set background color of toggler icon */
+        }
+
+        .navbar-dark .navbar-nav .nav-link:hover,
+        .navbar-dark .navbar-nav .nav-link:focus {
+            background-color: #343a40; /* Set background color on hover/focus */
+        }
+
+        .dropdown-menu {
+            background-color: #343a40; /* Set background color of dropdown menu */
+        }
+
+        .dropdown-item {
+            color: #fff; /* Set text color to white */
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            background-color: #545b62; /* Set background color on hover/focus for dropdown items */
+            color: #fff; /* Set text color to white on hover/focus for dropdown items */
+        }
+
+        /* Style for Logout link */
+        .logout-link {
+            font-size: 18px; /* Set font size to 18px */
+            border-bottom: 1px solid #fff; /* Add line underneath */
+            padding-bottom: 5px; /* Add padding at the bottom */
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <!-- Left corner: Library System link -->
+            <a class="navbar-brand" href="{{ url_for('index') }}">Library System</a>
+
+            <!-- Right corner: Navigation Links Dropdown -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="navbar-collapse justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Menu
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% if session['role'] == 'user' %}
+                                <a class="dropdown-item" href="{{ url_for('cart') }}">Cart</a>
+                                <a class="dropdown-item" href="{{ url_for('user_book_requests') }}">Book Requests</a>
+                                <a class="dropdown-item" href="{{ url_for('user_dashboard') }}">Dashboard</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('login') }}" style="font-size: 1.2em;">Logout</a>
+                            {% elif session['role'] == 'librarian' %}
+                                <a class="dropdown-item" href="{{ url_for('librarian_book_requests') }}">Book Requests</a>
+                                <a class="dropdown-item" href="{{ url_for('librarian_show_book_requests') }}">Issued Books</a>
+                                <a class="dropdown-item" href="{{ url_for('librarian_dashboard') }}">Dashboard</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('login') }}" style="font-size: 1.2em;">Logout</a>
+                            {% elif session['role'] == 'admin' %}
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{{ url_for('login') }}" style="font-size: 1.2em;">Logout</a>
+                            {% else %}
+                                <a class="dropdown-item" href="{{ url_for('login') }}">Login</a>
+                            {% endif %}
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    <div class="container mt-4">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

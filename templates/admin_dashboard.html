@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4" style="font-family: 'Arial', sans-serif; color: #a70cdb;">Admin Dashboard</h1>
+
+        {% if 'admin_id' in session %}
+            <p style="text-align: center; font-size: 20px; color: #666;"><strong>Welcome, Admin!</strong></p>
+
+            <h2 style="text-align: center; font-size: 24px; margin-top: 20px; color: #d15a0a;">Librarian Requests</h2>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="text-align: center;">Username</th>
+                        <th style="text-align: center;">Status</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in requests %}
+                        <tr>
+                            <td style="text-align: center;">{{ request.username }}</td>
+                            <td style="text-align: center;">{{ request.status }}</td>
+                            <td style="text-align: center;">
+                                {% if request.status == 'pending' %}
+                                    <a href="{{ url_for('accept_librarian', id=request.id) }}" class="btn btn-success">Approve</a>
+                                    <a href="{{ url_for('reject_librarian', id=request.id) }}" class="btn btn-danger">Reject</a>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h2 style="text-align: center; font-size: 24px; margin-top: 20px; color: #d15a0a;">Current Users</h2>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="text-align: center;">Username</th>
+                        <th style="text-align: center;">Role</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in logged_in_users %}
+                        <tr>
+                            <td style="text-align: center;">{{ user.username }}</td>
+                            <td style="text-align: center;">{{ user.role }}</td>
+                            <td class="text-center">
+                                <a href="{{ url_for('disable_user', user_id=user.id) }}" class="btn btn-danger">Disable Access</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="text-align: center; font-size: 18px; color: #666;">You are not logged in as an admin.</p>
+        {% endif %}
+    </div>
+{% endblock %}

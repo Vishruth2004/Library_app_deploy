@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        {% if user_request %}
+            <h1 class="text-center mb-4" style="color: #5a6268;">Book Feedback - {{ user_request.book.name }}</h1>
+        {% else %}
+            <h1 class="text-center mb-4" style="color: #5a6268;">Book Feedback - {{ book.name }}</h1>
+        {% endif %}
+
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title" style="color: #007bff;">Your Recent Feedback</h5>
+                {% if user_feedback %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Your Rating:</strong> {{ user_feedback.rating }} out of 5 stars</p>
+                            <p><strong>Your Comment:</strong> {{ user_feedback.comment }}</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <p>No feedback given yet. Give your feedback below.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <h2 class="mt-4">Feedback from Others</h2>
+        {% if feedbacks %}
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="card-title" style="color: #007bff;">Feedback Summary</h5>
+                    <p class="card-text"><strong>Average Rating: </strong>{{ average_rating }}/5 stars</p>
+                    <hr>
+                    <h6 class="card-subtitle mb-2 text-muted"><strong>Overall Rating Counts</strong></h6>
+                    <ul class="list-group">
+                        {% for rating, count in overall_ratings_count.items() %}
+                        <li class="list-group-item"><strong>Rating: </strong>{{ rating }} stars - <strong>Count:</strong> {{ count }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% for feedback in feedbacks %}
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="card-title" style="color: #007bff;">Rating: {{ feedback.rating }} out of 5 stars</h5>
+                        <p class="card-text">{{ feedback.comment }}</p>
+                        <p class="card-text"><strong>Given by: </strong>{{ feedback.user_name }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No feedback available yet. Be the first to provide feedback!</p>
+        {% endif %}
+
+        <!-- Feedback Form -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h5 class="card-title" style="color: #007bff;">Give Your Feedback</h5>
+                {% if user_request.status in ['Approved', 'Access Removed', 'Due Date Passed', 'User Returned'] %}
+                    <form method="POST" action="{{ url_for('user_give_feedback', request_id=user_request.id) }}">
+                        <div class="mb-3">
+                            <label for="rating" class="form-label"><strong>Rating (out of 5 stars)</strong></label>
+                            <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="comment" class="form-label"><strong>Comment</strong></label>
+                            <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Submit Feedback</button>
+                    </form>
+                {% else %}
+                    <p>Users who have read this book can only comment. Request this book to give feedback</p>
+                {% endif %}
+            </div>
+        </div>
+        {% if GoBack == 0 %}
+            <a href="{{ url_for('user_section_details', section_id=book.section_id) }}" class="btn btn-secondary mt-3">Go Back</a>
+        {% elif GoBack == 1 %}
+            <a href="{{ url_for('user_book_requests') }}" class="btn btn-secondary mt-3">Go Back</a>
+        {% else %}
+            <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary mt-3">Go Back</a>
+        {% endif %}
+    </div>
+{% endblock %}

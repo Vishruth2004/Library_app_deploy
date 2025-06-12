@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Librarian Dashboard</h1>
+        <p style="text-align: center; font-size: 20px; color: #666;"><strong>Welcome, {{ librarian_name }}!</strong></p>
+
+        {% include 'search.html' %}
+
+        {% if sections %}
+            <h2>Sections</h2>
+            <table class="table table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th style="text-align: center;">Section Name</th>
+                        <th style="text-align: center;">Description</th>
+                        <th style="text-align: center;">Total Books</th>
+                        <th style="text-align: center;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for section in sections %}
+                        <tr>
+                            <td style="text-align: center;"><a href="{{ url_for('section_details', section_id=section.id) }}"><strong>{{ section.name }}</strong></a></td>
+                            <td style="text-align: center;">{{ section.description }}</td>
+                            <td style="text-align: center;">{{ section.books.count() }}</td>
+                            <td style="text-align: center;">
+                                <a href="{{ url_for('update_section', section_id=section.id) }}" class="btn btn-info btn-sm">Update</a>
+                                <a href="{{ url_for('delete_section', section_id=section.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="mt-3">No sections added yet</p>
+        {% endif %}
+        <a href="{{ url_for('add_section') }}" class="btn btn-primary mt-3">Add Section</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <form method="post" enctype="multipart/form-data">
+    <div class="form-group row">
+      <label for="q" class="col-sm-2 col-form-label"><strong>Search Query</strong></label>
+      <div class="col-sm-10">
+        <input type="text" class="form-control" id="q" name="q" value="{{ search_query }}" placeholder="Enter search query...">
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label class="col-sm-2 col-form-label"><strong>Search Type</strong></label>
+      <div class="col-sm-10">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="search-type" id="search_section" value="sections" checked>
+          <label class="form-check-label" for="search_section">Section</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="search-type" id="search_book" value="books">
+          <label class="form-check-label" for="search_book">Book</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <label for="search-by" class="col-sm-2 col-form-label"><strong>Search by</strong></label>
+      <div class="col-sm-10">
+        <select name="search-by" id="search-by" class="form-control">
+          <!-- Options will be populated dynamically by JavaScript -->
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group row">
+      <div class="col-sm-10 offset-sm-2">
+        <button type="submit" class="btn btn-primary">Search</button>
+        <a href="javascript:location.reload(true)" class="btn btn-secondary">Clear</a>
+      </div>
+    </div>
+  </form>
+</div>
+
+
+<script>
+  $(function() {
+    // Function to populate the search by options
+    function populateSearchByOptions(searchType) {
+      const searchBySelect = $('#search-by');
+      searchBySelect.empty();
+
+      if (searchType === 'sections') {
+        searchBySelect.append('<option value="name">Name</option>');
+        searchBySelect.append('<option value="description">Description</option>');
+      } else if (searchType === 'books') {
+        searchBySelect.append('<option value="book_name">Book Name</option>');
+        searchBySelect.append('<option value="author">Author</option>');
+        searchBySelect.append('<option value="section_name">Section Name</option>');
+      }
+    }
+
+    // Event listener for the search type radio buttons
+    $('input[name="search-type"]').on('change', function() {
+      const searchType = $(this).val();
+      populateSearchByOptions(searchType);
+    });
+
+    // Initialize the search by options based on the initial search type
+    const initialSearchType = $('input[name="search-type"]:checked').val();
+    populateSearchByOptions(initialSearchType);
+  });
+</script>

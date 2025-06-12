@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container mt-4">
+        <h1 class="text-center mb-4" style="color: #5a6268;">Your Cart</h1>
+        <table class="table table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th style="text-align: center;">Book Name</th>
+                    <th style="text-align: center;">Content</th>
+                    <th style="text-align: center;">Author</th>
+                    <th style="text-align: center;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for cart_item in user.cart_items %}
+                    <tr>
+                        <td style="text-align: center;"><strong>{{ cart_item.book.name }}</strong></td>
+                        <td style="text-align: center;">Request the Book to Read</td>
+                        <td style="text-align: center;">{{ cart_item.book.author }}</td>
+                        <td style="text-align: center;">
+                            <a href="{{ url_for('user_request_book', book_id=cart_item.book.id) }}" class="btn btn-primary">Request eBook</a>
+                            <a href="{{ url_for('user_remove_from_cart', cart_item_id=cart_item.id) }}" class="btn btn-danger">Remove from Cart</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary mt-4">Back to Dashboard</a>
+    </div>
+{% endblock %}
