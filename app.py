@@ -7,11 +7,16 @@ from os.path import join
 
 app = Flask(__name__)
 
-app.secret_key = 'Hello_My_Secert_Key'
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'Hello_My_Secert_Key')
 
-static_folder = os.path.abspath('static')
-database_file = join(static_folder, 'test.db')
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{database_file}'
+database_url = os.environ.get('DATABASE_URL', '')
+if database_url.startswith('postgres://'):
+    database_url = database_url.replace('postgres://', 'postgresql://', 1)
+if not database_url:
+    static_folder = os.path.abspath('static')
+    database_file = join(static_folder, 'test.db')
+    database_url = f'sqlite:///{database_file}'
+app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 
 upload_folder = 'static/uploads/' 
 app.config['UPLOAD_FOLDER'] = upload_folder 
@@ -29,8 +34,8 @@ def index():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     error_message = None
-    admin_username = 'admin'
-    admin_password = 'admin123'
+    admin_username = os.environ.get('ADMIN_USERNAME', 'admin')
+    admin_password = os.environ.get('ADMIN_PASSWORD', 'admin123')
 
     if request.method == 'POST':
         name = request.form['username']
@@ -693,7 +698,14 @@ def search_items(search_query, Model, str_param):
 
     return item_results
 
+# Ensure uploads directory exists
+os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+
 if __name__ == '__main__':
    with app.app_context():
         db.create_all()
-   app.run(debug=True)
+   app.run(debug=True, port=5003, host='0.0.0.0')
+else:
+    # When run via gunicorn (production), create tables on startup
+    with app.app_context():
+        db.create_all()
