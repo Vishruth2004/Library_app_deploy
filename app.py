@@ -10,12 +10,16 @@ app = Flask(__name__)
 app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'Hello_My_Secert_Key')
 
 database_url = os.environ.get('DATABASE_URL', '')
-if database_url.startswith('postgres://'):
-    database_url = database_url.replace('postgres://', 'postgresql://', 1)
-if not database_url:
+if database_url:
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql+psycopg2://', 1)
+    elif database_url.startswith('postgresql://'):
+        database_url = database_url.replace('postgresql://', 'postgresql+psycopg2://', 1)
+else:
     static_folder = os.path.abspath('static')
     database_file = join(static_folder, 'test.db')
     database_url = f'sqlite:///{database_file}'
+
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 
 upload_folder = 'static/uploads/' 
